@@ -197,7 +197,7 @@ func ServiceOtel(resources FunctionResources) client.Object {
 		},
 		Spec: corev1.ServiceSpec{
 			InternalTrafficPolicy: &serviceInternalTrafficPolicyCluster,
-			IPFamilies:            []corev1.IPFamily{"IPv4"},
+			IPFamilies:            []corev1.IPFamily{"IPv6"},
 			IPFamilyPolicy:        &ipFamilyPolicyType,
 			Ports: []corev1.ServicePort{{
 				Name:       "otel-" + strconv.Itoa(settings.OtelContainerPort),

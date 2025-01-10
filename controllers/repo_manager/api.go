@@ -152,7 +152,7 @@ func serviceAPISpec(pulp pulpv1.Pulp) corev1.ServiceSpec {
 
 	return corev1.ServiceSpec{
 		InternalTrafficPolicy: &serviceInternalTrafficPolicyCluster,
-		IPFamilies:            []corev1.IPFamily{"IPv4"},
+		IPFamilies:            []corev1.IPFamily{"IPv6"},
 		IPFamilyPolicy:        &ipFamilyPolicyType,
 		Ports: []corev1.ServicePort{{
 			Name:       "api-24817",
