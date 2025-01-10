@@ -125,7 +125,7 @@ func serviceContentSpec(pulp repomanagerpulpprojectorgv1beta2.Pulp) corev1.Servi
 
 	return corev1.ServiceSpec{
 		InternalTrafficPolicy: &serviceInternalTrafficPolicyCluster,
-		IPFamilies:            []corev1.IPFamily{"IPv4"},
+		IPFamilies:            []corev1.IPFamily{"IPv6"},
 		IPFamilyPolicy:        &ipFamilyPolicyType,
 		Ports: []corev1.ServicePort{{
 			Name:       "content-24816",

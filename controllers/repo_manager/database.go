@@ -485,7 +485,7 @@ func serviceForDatabase(m *repomanagerpulpprojectorgv1beta2.Pulp) *corev1.Servic
 			ClusterIP:             "None",
 			ClusterIPs:            []string{"None"},
 			InternalTrafficPolicy: &serviceInternalTrafficPolicyCluster,
-			IPFamilies:            []corev1.IPFamily{"IPv4"},
+			IPFamilies:            []corev1.IPFamily{"IPv6"},
 			IPFamilyPolicy:        &ipFamilyPolicyType,
 			Ports: []corev1.ServicePort{{
 				Port:       5432,
