@@ -505,6 +505,18 @@ func (r *RepoManagerReconciler) pulpWebConfigMap(m *repomanagerpulpprojectorgv1b
 
 			include /etc/nginx/conf.d/*.conf;
 
+			location /static/ {
+				# The static UI is served from the this server
+				index index.html;
+				try_files $uri $uri/ /static/pulp_ui/index.html =404;
+			}
+
+			location ~ ^/$ {
+				# Redirect requests for the root to the static UI
+				absolute_redirect off;
+				rewrite ^/$ /static/pulp_ui/ permanent;
+			}
+
 			location / {
 				# Try to serve from local, otherwise proxy to the API server, except as above
 				try_files $uri @pulp_api;
