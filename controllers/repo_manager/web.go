@@ -197,8 +197,8 @@ func (r *RepoManagerReconciler) deploymentForPulpWeb(m *repomanagerpulpprojector
 	}
 	envVars = append(envVars, m.Spec.Web.EnvVars...)
 
-	runAsUser := int64(700)
-	fsGroup := int64(700)
+	runAsUser := int64(101)
+	fsGroup := int64(101)
 
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
