@@ -472,9 +472,9 @@ func (r *RepoManagerReconciler) pulpWebConfigMap(ctx context.Context, m *pulpv1.
 
 			# static files that can change dynamically, or are needed for TLS
 			# purposes are served through the webserver.
-			root "/opt/app-root/src";
+			root "/usr/share/nginx/html";
 
-			location /pulp/content/ {
+			location @pulp_content {
 				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 				proxy_set_header X-Forwarded-Proto $scheme;
 				proxy_set_header Host $http_host;
@@ -485,6 +485,10 @@ func (r *RepoManagerReconciler) pulpWebConfigMap(ctx context.Context, m *pulpv1.
 			}
 
 			location ` + controllers.GetAPIRoot(ctx, r.Client, m) + `api/v3/ {
+				try_files "" @pulp_api;
+			}
+
+			location @pulp_api {
 				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 				proxy_set_header X-Forwarded-Proto $scheme;
 				proxy_set_header Host $http_host;
@@ -492,30 +496,22 @@ func (r *RepoManagerReconciler) pulpWebConfigMap(ctx context.Context, m *pulpv1.
 				# redirects, we set the Host: header above already.
 				proxy_redirect off;
 				proxy_pass http://pulp-api;
+			}
+
+			location /pulp/content/ {
+				try_files "" @pulp_content;
 			}
 
 			location /auth/login/ {
-				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-				proxy_set_header X-Forwarded-Proto $scheme;
-				proxy_set_header Host $http_host;
-				# we don't want nginx trying to do something clever with
-				# redirects, we set the Host: header above already.
-				proxy_redirect off;
-				proxy_pass http://pulp-api;
+				try_files "" @pulp_api;
 			}
 
-			include /opt/app-root/etc/nginx.default.d/*.conf;
+			include /etc/nginx/conf.d/*.conf;
 			include /etc/nginx/pulp/*.conf;
 
 			location / {
-				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-				proxy_set_header X-Forwarded-Proto $scheme;
-				proxy_set_header Host $http_host;
-				# we don't want nginx trying to do something clever with
-				# redirects, we set the Host: header above already.
-				proxy_redirect off;
-				proxy_pass http://pulp-api;
-				# static files are served through whitenoise - http://whitenoise.evans.io/en/stable/
+				# Try to serve from local, otherwise proxy to the API server, except as above
+				try_files $uri @pulp_api;
 			}
 		}
 	}
