@@ -3,7 +3,7 @@ LOWER_CR_KIND = $(shell echo $(CR_KIND) | tr A-Z a-z)
 CR_PLURAL ?= pulps
 CR_DOMAIN ?= pulpproject.org
 APP_IMAGE ?= quay.io/pulp/pulp-minimal
-WEB_IMAGE ?= quay.io/pulp/pulp-web
+WEB_IMAGE ?= registry.prod.ciq.dev/pulp/pulp-web
 
 # VERSION defines the project version for the bundle.
 # Update this value when you upgrade the version of your project.
