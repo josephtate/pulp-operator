@@ -450,6 +450,12 @@ type Api struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
 	NodeSelector map[string]string `json:"node_selector,omitempty"`
 
+	// PodSecurityContext defines the pod-level security attributes for the pulp-api pods.
+	// If unset, runAsUser and fsGroup default to 700.
+	// +kubebuilder:validation:Optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
+	PodSecurityContext *corev1.PodSecurityContext `json:"pod_security_context,omitempty"`
+
 	// Node tolerations for the Pulp pods.
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
@@ -560,6 +566,12 @@ type Content struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
 	NodeSelector map[string]string `json:"node_selector,omitempty"`
 
+	// PodSecurityContext defines the pod-level security attributes for the pulp-content pods.
+	// If unset, runAsUser and fsGroup default to 700.
+	// +kubebuilder:validation:Optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
+	PodSecurityContext *corev1.PodSecurityContext `json:"pod_security_context,omitempty"`
+
 	// Node tolerations for the Pulp pods.
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
@@ -666,6 +678,12 @@ type Worker struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
 	NodeSelector map[string]string `json:"node_selector,omitempty"`
 
+	// PodSecurityContext defines the pod-level security attributes for the pulp-worker pods.
+	// If unset, runAsUser and fsGroup default to 700.
+	// +kubebuilder:validation:Optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
+	PodSecurityContext *corev1.PodSecurityContext `json:"pod_security_context,omitempty"`
+
 	// Node tolerations for the Pulp pods.
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
@@ -759,6 +777,12 @@ type Web struct {
 	// +kubebuilder:validation:Optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
 	NodeSelector map[string]string `json:"node_selector,omitempty"`
+
+	// PodSecurityContext defines the pod-level security attributes for the pulp-web pods.
+	// If unset, runAsUser and fsGroup default to 700.
+	// +kubebuilder:validation:Optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,xDescriptors={"urn:alm:descriptor:com.tectonic.ui:advanced"}
+	PodSecurityContext *corev1.PodSecurityContext `json:"pod_security_context,omitempty"`
 
 	// PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods
 	// +optional
