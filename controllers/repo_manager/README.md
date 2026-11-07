@@ -30,6 +30,7 @@ Api defines desired state of pulpcore-api resources
 | hpa | HPA defines the Horizontal Pod Autoscaler configuration for the pulp-api deployment | *[HPA](#hpa) | false |
 | affinity | Affinity is a group of affinity scheduling rules. | *corev1.Affinity | false |
 | node_selector | NodeSelector for the Pulp pods. | map[string]string | false |
+| pod_security_context | PodSecurityContext defines the pod-level security attributes for the pulp-api pods. If unset, runAsUser and fsGroup default to 700. | *corev1.PodSecurityContext | false |
 | tolerations | Node tolerations for the Pulp pods. | []corev1.Toleration | false |
 | topology_spread_constraints | Topology rule(s) for the pods. | []corev1.TopologySpreadConstraint | false |
 | gunicorn_timeout | The timeout for the gunicorn process. Default: 90 | int | false |
@@ -42,6 +43,9 @@ Api defines desired state of pulpcore-api resources
 | strategy | The deployment strategy to use to replace existing pods with new ones. | appsv1.DeploymentStrategy | false |
 | init_container | InitContainer defines configuration of the init-containers that run in pulpcore pods | [PulpContainer](#pulpcontainer) | false |
 | env_vars | Environment variables to add to pulpcore-api container | []corev1.EnvVar | false |
+| service_account_name | ServiceAccount to use in pulpcore-api pods | string | false |
+| extra_volumes | Volumes to add to pulpcore-api pods | []corev1.Volume | false |
+| extra_volume_mounts | Volume mounts to add to pulpcore-api container | []corev1.VolumeMount | false |
 | deployment_annotations | Annotations for the api deployment | map[string]string | false |
 | pod_labels | Labels to add to api pods | map[string]string | false |
 
@@ -82,6 +86,7 @@ Content defines desired state of pulpcore-content resources
 | resource_requirements | Resource requirements for the pulp-content container | corev1.ResourceRequirements | false |
 | affinity | Affinity is a group of affinity scheduling rules. | *corev1.Affinity | false |
 | node_selector | NodeSelector for the Pulp pods. | map[string]string | false |
+| pod_security_context | PodSecurityContext defines the pod-level security attributes for the pulp-content pods. If unset, runAsUser and fsGroup default to 700. | *corev1.PodSecurityContext | false |
 | tolerations | Node tolerations for the Pulp pods. | []corev1.Toleration | false |
 | topology_spread_constraints | Topology rule(s) for the pods. | []corev1.TopologySpreadConstraint | false |
 | gunicorn_timeout | The timeout for the gunicorn process. Default: 90 | int | false |
@@ -93,6 +98,9 @@ Content defines desired state of pulpcore-content resources
 | strategy | The deployment strategy to use to replace existing pods with new ones. | appsv1.DeploymentStrategy | false |
 | init_container | InitContainer defines configuration of the init-containers that run in pulpcore pods | [PulpContainer](#pulpcontainer) | false |
 | env_vars | Environment variables to add to pulpcore-content container | []corev1.EnvVar | false |
+| service_account_name | ServiceAccount to use in pulpcore-content pods | string | false |
+| extra_volumes | Volumes to add to pulpcore-content pods | []corev1.Volume | false |
+| extra_volume_mounts | Volume mounts to add to pulpcore-content container | []corev1.VolumeMount | false |
 | deployment_annotations | Annotations for the content deployment | map[string]string | false |
 | pod_labels | Labels to add to content pods | map[string]string | false |
 
@@ -214,6 +222,8 @@ PulpSpec defines the desired state of Pulp
 | db_fields_encryption_secret | Secret where the Fernet symmetric encryption key is stored. Default: <operators's name>-\"-db-fields-encryption\" | string | false |
 | signing_secret | Name of the Secret where the gpg key is stored. | string | false |
 | signing_scripts | Name of the Secret where the signing scripts are stored. | string | false |
+| ip_family_policy | The IP family policy to use for the Services the operator creates for pulp-api, pulp-content, the database, and otel. Does not apply to pulp-web or redis, which inherit the cluster's default IP family. Mirrors corev1.ServiceSpec.IPFamilyPolicy exactly: SingleStack, PreferDualStack, or RequireDualStack. Default: SingleStack Kubernetes only allows changing this on an existing Service from SingleStack to a dual-stack policy; other transitions are rejected by the API server as immutable, so set it before first creating a Pulp CR. | *corev1.IPFamilyPolicy | false |
+| ip_families | The IP families to assign to the Services the operator creates for pulp-api, pulp-content, the database, and otel. Does not apply to pulp-web or redis, which inherit the cluster's default IP family. Mirrors corev1.ServiceSpec.IPFamilies exactly: a list of \"IPv4\" and/or \"IPv6\", order determines primary family under PreferDualStack/RequireDualStack. Must match what the cluster's CNI/cluster-cidr actually supports; the operator does not validate this and passes it straight through. Default: [\"IPv4\"] See ip_family_policy for the same create-time-only caveat. | []corev1.IPFamily | false |
 | ingress_type | The ingress type to use to reach the deployed instance. Default: none (will not expose the service) | string | false |
 | ingress_annotations | Annotations for the Ingress | map[string]string | false |
 | ingress_class_name | IngressClassName is used to inform the operator which ingressclass should be used to provision the ingress. Default: \"\" (will use the default ingress class) | string | false |
@@ -324,6 +334,7 @@ Web defines desired state of pulpcore-web (reverse-proxy) resources
 | readinessProbe | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. | *corev1.Probe | false |
 | livenessProbe | Periodic probe of container liveness. Container will be restarted if the probe fails. | *corev1.Probe | false |
 | node_selector | NodeSelector for the Web pods. | map[string]string | false |
+| pod_security_context | PodSecurityContext defines the pod-level security attributes for the pulp-web pods. If unset, runAsUser and fsGroup default to 700. | *corev1.PodSecurityContext | false |
 | pdb | PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods | *policy.PodDisruptionBudgetSpec | false |
 | strategy | The deployment strategy to use to replace existing pods with new ones. | appsv1.DeploymentStrategy | false |
 | service_annotations | Annotations for the service | map[string]string | false |
@@ -345,6 +356,7 @@ Worker defines desired state of pulpcore-worker resources
 | resource_requirements | Resource requirements for the pulp-api container | corev1.ResourceRequirements | false |
 | affinity | Affinity is a group of affinity scheduling rules. | *corev1.Affinity | false |
 | node_selector | NodeSelector for the Pulp pods. | map[string]string | false |
+| pod_security_context | PodSecurityContext defines the pod-level security attributes for the pulp-worker pods. If unset, runAsUser and fsGroup default to 700. | *corev1.PodSecurityContext | false |
 | tolerations | Node tolerations for the Pulp pods. | []corev1.Toleration | false |
 | topology_spread_constraints | Topology rule(s) for the pods. | []corev1.TopologySpreadConstraint | false |
 | readinessProbe | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. | *corev1.Probe | false |
@@ -353,6 +365,9 @@ Worker defines desired state of pulpcore-worker resources
 | strategy | The deployment strategy to use to replace existing pods with new ones. | appsv1.DeploymentStrategy | false |
 | init_container | InitContainer defines configuration of the init-containers that run in pulpcore pods | [PulpContainer](#pulpcontainer) | false |
 | env_vars | Environment variables to add to pulpcore-worker container | []corev1.EnvVar | false |
+| service_account_name | ServiceAccount to use in pulpcore-worker pods | string | false |
+| extra_volumes | Volumes to add to pulpcore-worker pods | []corev1.Volume | false |
+| extra_volume_mounts | Volume mounts to add to pulpcore-worker container | []corev1.VolumeMount | false |
 | deployment_annotations | Annotations for the worker deployment | map[string]string | false |
 | pod_labels | Labels to add to worker pods | map[string]string | false |
 

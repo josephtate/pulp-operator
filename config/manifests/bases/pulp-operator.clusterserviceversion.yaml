@@ -282,6 +282,12 @@ spec:
         path: api.pod_labels
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: PodSecurityContext defines the pod-level security attributes
+          for the pulp-api pods. If unset, runAsUser and fsGroup default to 700.
+        displayName: Pod Security Context
+        path: api.pod_security_context
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
       - description: Periodic probe of container service readiness. Container will
           be removed from service endpoints if the probe fails.
         displayName: Readiness Probe
@@ -496,6 +502,12 @@ spec:
       - description: Labels to add to content pods
         displayName: Pod Labels
         path: content.pod_labels
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: PodSecurityContext defines the pod-level security attributes
+          for the pulp-content pods. If unset, runAsUser and fsGroup default to 700.
+        displayName: Pod Security Context
+        path: content.pod_security_context
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       - description: Periodic probe of container service readiness. Container will
@@ -763,6 +775,29 @@ spec:
         path: inhibit_version_constraint
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: 'The IP families to assign to the Services the operator creates
+          for pulp-api, pulp-content, the database, and otel. Does not apply to pulp-web
+          or redis, which inherit the cluster''s default IP family. Mirrors corev1.ServiceSpec.IPFamilies
+          exactly: a list of "IPv4" and/or "IPv6", order determines primary family
+          under PreferDualStack/RequireDualStack. Must match what the cluster''s CNI/cluster-cidr
+          actually supports; the operator does not validate this and passes it straight
+          through. Default: ["IPv4"] See ip_family_policy for the same create-time-only
+          caveat.'
+        displayName: IPFamilies
+        path: ip_families
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: 'The IP family policy to use for the Services the operator creates
+          for pulp-api, pulp-content, the database, and otel. Does not apply to pulp-web
+          or redis, which inherit the cluster''s default IP family. Mirrors corev1.ServiceSpec.IPFamilyPolicy
+          exactly: SingleStack, PreferDualStack, or RequireDualStack. Default: SingleStack
+          Kubernetes only allows changing this on an existing Service from SingleStack
+          to a dual-stack policy; other transitions are rejected by the API server
+          as immutable, so set it before first creating a Pulp CR.'
+        displayName: IPFamily Policy
+        path: ip_family_policy
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
       - description: Disable ipv6 for pulpcore and pulp-web pods
         displayName: IPv6 Disabled
         path: ipv6_disabled
@@ -1019,6 +1054,12 @@ spec:
         path: web.pod_labels
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: PodSecurityContext defines the pod-level security attributes
+          for the pulp-web pods. If unset, runAsUser and fsGroup default to 700.
+        displayName: Pod Security Context
+        path: web.pod_security_context
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
       - description: Periodic probe of container service readiness. Container will
           be removed from service endpoints if the probe fails.
         displayName: Readiness Probe
@@ -1101,6 +1142,12 @@ spec:
       - description: Labels to add to worker pods
         displayName: Pod Labels
         path: worker.pod_labels
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: PodSecurityContext defines the pod-level security attributes
+          for the pulp-worker pods. If unset, runAsUser and fsGroup default to 700.
+        displayName: Pod Security Context
+        path: worker.pod_security_context
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       - description: Periodic probe of container service readiness. Container will
